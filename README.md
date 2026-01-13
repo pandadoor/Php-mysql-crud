@@ -4,46 +4,6 @@ A minimal, beginner-friendly CRUD (Create, Read, Update, Delete) application usi
 
 ---
 
-## 🔧 Prerequisites
-
-Before starting, you need:
-
-### 1. **XAMPP** (or similar local server)
-- Download from: https://www.apachefriends.org/
-- Includes: Apache (web server), MySQL (database), PHP
-- **OR** use WAMP, MAMP, or LAMP depending on your OS
-
-### 2. **Text Editor**
-- VS Code, Notepad++, Sublime Text, or any code editor
-
-### 3. **Web Browser**
-- Chrome, Firefox, Edge, etc.
-
----
-
-## 📥 Installation Steps
-
-### Step 1: Install XAMPP
-
-1. Download XAMPP from https://www.apachefriends.org/
-2. Run the installer
-3. Install to default location (usually `C:\xampp` on Windows)
-4. Complete installation
-
-### Step 2: Start XAMPP Services
-
-1. Open **XAMPP Control Panel**
-2. Click **Start** next to **Apache** (web server)
-3. Click **Start** next to **MySQL** (database)
-4. Both should show green "Running" status
-
-```
-✅ Apache  - Running on Port 80
-✅ MySQL   - Running on Port 3306
-```
-
----
-
 ## 🗄️ Database Setup
 
 ### Step 1: Access phpMyAdmin
@@ -75,23 +35,27 @@ CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   email VARCHAR(100) NOT NULL,
-  age INT NOT NULL
+  age INT NOT NULL,
+  password VARCHAR(255) NOT NULL
 );
 ```
 
 4. Click **"Go"** button
 5. You should see: "1 table has been created"
 
+**Important:** The `password` field is VARCHAR(255) because hashed passwords are 60 characters, but we use 255 to be safe for future password algorithms.
+
 ### Step 4: Verify Table Structure
 
 1. Click **`simple_crud`** database in left sidebar
 2. Click **`users`** table
 3. Click **"Structure"** tab
-4. You should see 4 columns:
+4. You should see 5 columns:
    - `id` (INT, AUTO_INCREMENT, PRIMARY KEY)
    - `name` (VARCHAR 100)
    - `email` (VARCHAR 100)
    - `age` (INT)
+   - `password` (VARCHAR 255) ← **For storing hashed passwords**
 
 ---
 
@@ -113,28 +77,19 @@ The `htdocs` folder is where your PHP files must be placed:
 
 ### Step 3: Create PHP Files
 
-Inside the `simple_crud` folder, create these 5 files:
+Inside the `simple_crud` folder, create these 7 files:
 
 ```
 htdocs/
 └── simple_crud/
     ├── db.php          ← Database connection
-    ├── index.php       ← List all users
-    ├── create.php      ← Add new user
-    ├── update.php      ← Edit user
-    └── delete.php      ← Delete user
+    ├── login.php       ← User login (authentication)
+    ├── logout.php      ← End user session
+    ├── index.php       ← List all users (protected)
+    ├── create.php      ← Add new user (register)
+    ├── update.php      ← Edit user (protected)
+    └── delete.php      ← Delete user (protected)
 ```
-
-### Step 4: Copy Code to Files
-
-Copy the code from each artifact into its corresponding file:
-
-1. **db.php** - Copy database connection code
-2. **index.php** - Copy user list code
-3. **create.php** - Copy add user code
-4. **update.php** - Copy edit user code
-5. **delete.php** - Copy delete user code
-
 ### Step 5: Verify Database Credentials
 
 Open `db.php` and verify these settings match your setup:
@@ -161,24 +116,17 @@ $password = '';           // Default XAMPP password (empty)
 ### Step 2: Access the Application
 
 1. Open your web browser
-2. Go to: **`http://localhost/simple_crud/index.php`**
-3. You should see the "User List" page
+2. Go to: **`http://localhost/simple_crud/login.php`**
+3. You should see the "Login" page
 
 ```
-Expected URL: http://localhost/simple_crud/index.php
+Expected URL: http://localhost/simple_crud/login.php
 
 URL Breakdown:
 - http://localhost  → Your local web server (Apache)
 - /simple_crud      → Your project folder name
-- /index.php        → Main page file
+- /login.php        → Login page (entry point)
 ```
-
-### Step 3: First View
-
-You should see:
-- **Heading:** "User List"
-- **Link:** "Add New User"
-- **Table:** Empty (showing "No users found")
 
 ---
 
@@ -282,12 +230,19 @@ The requested URL was not found on this server.
     ┌──────────┴──────────┐
     ↓                     ↓
 ┌──────────┐        ┌──────────┐
-│index.php │ ←────→ │create.php│  (Links between pages)
+│login.php │ ──────→│index.php │  (Login required to access)
 └──────────┘        └──────────┘
-    ↓                     ↓
-┌──────────┐        ┌──────────┐
-│update.php│ ←────→ │delete.php│
-└──────────┘        └──────────┘
+    ↑                     ↓
+    │              ┌──────┴──────┐
+┌──────────┐       ↓             ↓
+│logout.php│   ┌──────────┐ ┌──────────┐
+└──────────┘   │create.php│ │update.php│
+               └──────────┘ └──────────┘
+                     ↓             ↓
+               ┌──────────┐ ┌──────────┐
+               │Password  │ │delete.php│
+               │ Hashing  │ └──────────┘
+               └──────────┘
 ```
 
 ### Data Flow
@@ -384,17 +339,4 @@ if (!is_numeric($age) || $age < 1 || $age > 150) { ... }
 ```php
 $id = intval($_GET['id']);  // Forces integer, prevents string injection
 ```
-
----
-
-## 🆘 Getting Help
-
-If you encounter issues:
-
-1. **Check error messages** - They tell you what's wrong
-2. **Read comments in code** - Each line is explained
-3. **Verify XAMPP services** - Both Apache and MySQL must be running
-4. **Check file locations** - Files must be in `htdocs/simple_crud/`
-5. **Test database connection** - Go to phpMyAdmin to verify setup
-
 ---
