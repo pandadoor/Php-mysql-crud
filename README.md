@@ -4,18 +4,6 @@ A minimal, beginner-friendly CRUD (Create, Read, Update, Delete) application usi
 
 ---
 
-## 📋 Table of Contents
-1. [Prerequisites](#prerequisites)
-2. [Installation Steps](#installation-steps)
-3. [Database Setup](#database-setup)
-4. [File Setup](#file-setup)
-5. [Running the Application](#running-the-application)
-6. [Testing Each Feature](#testing-each-feature)
-7. [Troubleshooting](#troubleshooting)
-8. [Understanding the Code](#understanding-the-code)
-
----
-
 ## 🔧 Prerequisites
 
 Before starting, you need:
